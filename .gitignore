@@ -1,1 +1,6 @@
+# excluding node_modules directory
 node_modules/
+client/node_modules
+
+# excluding mongodb data directory
+data/

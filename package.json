@@ -1,0 +1,32 @@
+{
+  "name": "ng-uml",
+  "version": "1.0.0",
+  "description": "Muli-user app for drawing UMl diagram",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js --exec babel-node",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nivekiba/ng-uml-class.git"
+  },
+  "keywords": [
+    "uml",
+    "angular",
+    "mean"
+  ],
+  "author": "Nivek <kevinnguetchouang@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nivekiba/ng-uml-class/issues"
+  },
+  "homepage": "https://github.com/Nivekiba/ng-uml-class#readme",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.1"
+  }
+}
