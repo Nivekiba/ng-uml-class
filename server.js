@@ -13,6 +13,12 @@ mongoose.set('useCreateIndex', true);
 require("./server/models/task")
 require("./server/models/todo")
 
+require("./server/models/property")
+require("./server/models/class")
+require("./server/models/link")
+require("./server/models/diagram")
+require("./server/models/user")
+
 
 
 const app = express();
