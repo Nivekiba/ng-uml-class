@@ -1,37 +1,41 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { MyMaterialModule } from  './material.module';
-import { RouterModule, Routes } from '@angular/router';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {AppComponent} from './app.component';
+import {MaterialModule} from './material.module';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {WelcomeComponent} from './welcome/welcome.component';
+import {DashboardComponent} from './dashboard/dashboard.component';
+import {AppRouters} from './app.routes';
+import {DataService} from './data/data.service';
+import {AuthService} from './auth.service';
+import {PostDialogComponent} from './post-dialog/post-dialog.component';
+import {FormsModule} from '@angular/forms';
 import { RegistrationComponentComponent } from './registration-component/registration-component.component';
 import { LoginComponentComponent } from './login-component/login-component.component';
-
-
-
 
 @NgModule({
   declarations: [
     AppComponent,
-    RegistrationComponentComponent,
+    WelcomeComponent,
+    DashboardComponent,
+    PostDialogComponent,
+	RegistrationComponentComponent,
     LoginComponentComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MyMaterialModule,
-    RouterModule.forRoot([
-      { path: '', redirectTo: '/', pathMatch: 'full' },
-      { path: 'register', component: RegistrationComponentComponent },
-      { path: 'login', component: LoginComponentComponent },
-      
-    
-    ]),
-
+    MaterialModule,
+    FlexLayoutModule,
+    AppRouters,
+    FormsModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [DataService, AuthService],
+  bootstrap: [AppComponent],
+  entryComponents: [
+    PostDialogComponent
+  ]
 })
-export class AppModule { }
-
+export class AppModule {}

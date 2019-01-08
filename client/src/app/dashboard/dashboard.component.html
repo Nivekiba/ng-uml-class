@@ -1,0 +1,33 @@
+<div>
+  <br>
+  <div class="container">
+    <div class>
+      <div fxLayout="column" fxLayoutGap="20px" fxLayout.gt-md="row"  fxLayoutAlign="space-around center" class="content">
+        <div class="blocks" *ngIf="auth.isAuthenticated()">
+          <button button="submit" mat-raised-button color="primary" (click)="openDialog()">
+            <mat-icon>add</mat-icon>Draw a new diagramm
+          </button>
+        </div>
+        <div class="blocks">
+          <a button mat-raised-button color="primary" routerLink="/login">
+            <mat-icon>input</mat-icon>Login to see your last diagram
+          </a>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="container">
+      <div >
+        <mat-card class="card" >
+          <mat-card-title >
+            <h3>List of diagram </h3>			
+          </mat-card-title>   
+
+
+		  
+        </mat-card>
+		
+      </div>
+    </div>
+  </div>
+</div>
