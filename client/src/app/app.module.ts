@@ -1,41 +1,26 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { ROUTING } from './app.routing';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
-import {AppComponent} from './app.component';
-import {MaterialModule} from './material.module';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {WelcomeComponent} from './welcome/welcome.component';
-import {DashboardComponent} from './dashboard/dashboard.component';
-import {AppRouters} from './app.routes';
-import {DataService} from './data/data.service';
-import {AuthService} from './auth.service';
-import {PostDialogComponent} from './post-dialog/post-dialog.component';
-import {FormsModule} from '@angular/forms';
-import { RegistrationComponentComponent } from './registration-component/registration-component.component';
-import { LoginComponentComponent } from './login-component/login-component.component';
+import { RootComponent } from './root/root.component';
+import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    WelcomeComponent,
-    DashboardComponent,
-    PostDialogComponent,
-	RegistrationComponentComponent,
-    LoginComponentComponent
+  	RootComponent,
+    LoginComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
-    MaterialModule,
-    FlexLayoutModule,
-    AppRouters,
+    ROUTING,
     FormsModule,
+    HttpClientModule
   ],
-  providers: [DataService, AuthService],
-  bootstrap: [AppComponent],
-  entryComponents: [
-    PostDialogComponent
-  ]
+  providers: [],
+  bootstrap: [RootComponent]
 })
-export class AppModule {}
+export class AppModule { }
