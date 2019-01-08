@@ -1,22 +1,37 @@
-import { BrowserModule} from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule} from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { MyMaterialModule } from  './material.module';
+import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { TaskService } from './services/task.service';
-import { TodoService } from './services/todo.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RegistrationComponentComponent } from './registration-component/registration-component.component';
+import { LoginComponentComponent } from './login-component/login-component.component';
+
+
+
 
 @NgModule({
- declarations: [
-   AppComponent
- ],
- imports: [
-   BrowserModule,
-   HttpModule,
-   FormsModule
- ],
- providers: [TaskService, TodoService],
- bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    RegistrationComponentComponent,
+    LoginComponentComponent
+  ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MyMaterialModule,
+    RouterModule.forRoot([
+      { path: '', redirectTo: '/', pathMatch: 'full' },
+      { path: 'register', component: RegistrationComponentComponent },
+      { path: 'login', component: LoginComponentComponent },
+      
+    
+    ]),
+
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
+
