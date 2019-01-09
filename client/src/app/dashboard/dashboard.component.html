@@ -3,15 +3,10 @@
   <div class="container">
     <div class>
       <div fxLayout="column" fxLayoutGap="20px" fxLayout.gt-md="row"  fxLayoutAlign="space-around center" class="content">
-        <div class="blocks" *ngIf="auth.isAuthenticated()">
-          <button button="submit" mat-raised-button color="primary" (click)="openDialog()">
-            <mat-icon>add</mat-icon>Draw a new diagramm
+        <div class="blocks" *ngIf="auth.isLoggedIn()">
+          <button button="submit" mat-raised-button color="primary" (click)="addDiagram()">
+            <mat-icon>add</mat-icon> Draw a new diagram
           </button>
-        </div>
-        <div class="blocks">
-          <a button mat-raised-button color="primary" routerLink="/login">
-            <mat-icon>input</mat-icon>Login to see your last diagram
-          </a>
         </div>
       </div>
     </div>
@@ -20,14 +15,22 @@
       <div >
         <mat-card class="card" >
           <mat-card-title >
-            <h3>List of diagram </h3>			
-          </mat-card-title>   
+            <h3>List of diagrams </h3>
+          </mat-card-title>
 
+          <mat-grid-list cols="3">
+            <mat-grid-tile
+                colspan="1">
+              Liste ici
+            </mat-grid-tile>
+            <mat-grid-tile
+                colspan="2">
+              <div style="width: 100%;height: 100%;"></div>
+            </mat-grid-tile>
+          </mat-grid-list>
 
-			
-		  
         </mat-card>
-		
+        <script src="go.js"></script>
       </div>
     </div>
   </div>

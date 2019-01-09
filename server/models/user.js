@@ -11,7 +11,7 @@ let UserSchema = new mongoose.Schema({
  });
   
 UserSchema.methods.comparePassword = function(passw, cb){
-    var isMatch = this.password = passw;
+    var isMatch = this.password == passw;
     cb(null, isMatch);
 }
 

@@ -15,6 +15,7 @@ import {
   MatSelectModule,
   MatDatepickerModule,
 } from '@angular/material';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import {
     MatDialogModule,
     MatInputModule,
     MatSelectModule,
-	MatDatepickerModule,
+  MatDatepickerModule,
+  MatGridListModule
   ],
   exports: [
     MatSidenavModule,
@@ -43,7 +45,8 @@ import {
     MatInputModule,
     MatSelectModule,
 	MatDatepickerModule,
-	MatFormFieldModule,
+  MatFormFieldModule,
+  MatGridListModule
   ]
 })
 export class MaterialModule {}

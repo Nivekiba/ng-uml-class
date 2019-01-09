@@ -14,6 +14,8 @@ import {PostDialogComponent} from './post-dialog/post-dialog.component';
 import {FormsModule} from '@angular/forms';
 import { RegistrationComponentComponent } from './registration-component/registration-component.component';
 import { LoginComponentComponent } from './login-component/login-component.component';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { AuthGuard } from './auth.guard';
 
 @NgModule({
   declarations: [
@@ -31,8 +33,9 @@ import { LoginComponentComponent } from './login-component/login-component.compo
     FlexLayoutModule,
     AppRouters,
     FormsModule,
+    HttpClientModule
   ],
-  providers: [DataService, AuthService],
+  providers: [DataService, AuthService, HttpClientModule, AuthGuard],
   bootstrap: [AppComponent],
   entryComponents: [
     PostDialogComponent

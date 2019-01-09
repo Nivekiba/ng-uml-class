@@ -3,37 +3,42 @@
 </mat-toolbar>
 <mat-card class="my-card">
    <mat-card-content>
-      <form class="my-form">  
+      <form class="my-form">
          <mat-form-field class="full-width">
             <mat-label>First Name</mat-label>
-            <input  matInput  placeholder="First name"  name="fname"  required>
+            <input  matInput [(ngModel)]="user.fname"  placeholder="First name"  name="fname">
          </mat-form-field>
          <mat-form-field class="full-width">
             <mat-label>Last Name</mat-label>
-            <input  matInput  placeholder="Last Name" name="lname"  required>
+            <input  matInput [(ngModel)]="user.lname" placeholder="Last Name" name="lname"  required>
          </mat-form-field>
          <mat-form-field class="full-width">
-            <mat-label>Address</mat-label>
-            <input  matInput  placeholder="Address" name="address"  required>
+            <mat-label>Sexe</mat-label>
+            <mat-select [(ngModel)]="user.sexe" placeholder="Sexe" name="sexe" required>
+                <mat-option value="H">Homme</mat-option>
+                <mat-option value="F">Femme</mat-option>
+            </mat-select>
          </mat-form-field>
          <mat-form-field class="full-width">
-            <mat-label>Email</mat-label>
-            <input  matInput  placeholder="Email" name="email">
+            <mat-label>Username</mat-label>
+            <input  matInput [(ngModel)]="user.username" placeholder="username" name="username" required>
          </mat-form-field>
          <mat-form-field class="full-width">
             <mat-label>Password</mat-label>
-            <input  matInput  placeholder="Password"  name="password">
+            <input  matInput [(ngModel)]="user.password" placeholder="Password" type="password"  name="password" required>
          </mat-form-field>
+         <mat-card-actions>
+            <button style="margin-left: 43%" mat-raised-button (click)="register()" color="primary">REGISTER</button>
+         </mat-card-actions>
+         <div style="text-align: center" ><span style="color:red;">{{messageE}}</span></div>
+         <div style="text-align: center" ><span style="color:green;">{{message}}</span></div>
          <section class="example-section">
-            
+
             <br>
             <br>
-                    
+
          </section>
-        
+
       </form>
    </mat-card-content>
-   <mat-card-actions>
-      <button mat-raised-button (click)="register()" color="primary">REGISTER</button>
-   </mat-card-actions>
 </mat-card>
