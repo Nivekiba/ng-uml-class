@@ -14,19 +14,38 @@
     <div class="container">
       <div >
         <mat-card class="card" >
-          <mat-card-title >
-            <h3>List of diagrams </h3>
-          </mat-card-title>
+            <mat-card-title >
+                <h3>List of diagrams </h3>
+            </mat-card-title>
 
-          <mat-grid-list cols="3" class="large">
-            <mat-grid-tile
-                colspan="1" class="large">
-              Liste ici
+          <mat-grid-list cols="8" class="large">
+            <mat-grid-tile colspan="2" rowspan="2" class="largpe">
+                <mat-list>
+                  Liste ici
+                </mat-list>
             </mat-grid-tile>
-            <mat-grid-tile
-                colspan="2" class="large">
-              <div style="width: 100%;height: 100%;" id="root"></div>
+            <mat-grid-tile colspan="5" rowspan="2" class="large" style="border: 1px solid black">
+              <div #graphContainer style="width: 100%;height: 100%;" id="graphContainer"></div>
+              <div id="contextMenu">
+                <ul>
+                  <li id="addp" (click)="addProperty(event)"><a href="#" target="_self">Add Property</a></li>
+                  <li id="addm" (click)="addMethod(event)"><a href="#" target="_self">Add Method</a></li>
+                  <li id="remp" (click)="removeProperty(event)"><a href="#" target="_self">Remove Property</a></li>
+                  <li id="remm" (click)="removeMethod(event)"><a href="#" target="_self">Remove Method</a></li>
+                </ul>
+              </div>
             </mat-grid-tile>
+
+            <mat-grid-tile colspan="1" rowspan="2" class="large" style="border: 1px solid black">
+              <mat-list style="width: 100%; height: 100%;">
+                <h3 mat-subheader>Palette</h3>
+                <mat-divider></mat-divider>
+                <mat-list-item style="width: 100%; height: 100%;">
+                  <div #paletteContainer style="width: 100%;height: 100%;" id="paletteContainer"></div>
+                </mat-list-item>
+              </mat-list>
+            </mat-grid-tile>
+
           </mat-grid-list>
 
         </mat-card>
