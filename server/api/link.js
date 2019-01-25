@@ -19,7 +19,7 @@ router.param('class', function (req, res, next, id) {
  });
 
  router.post('/', (req, res) => {
-    if (!req.body.diagramId || !req.body.name || !req.body.class1Id || !req.body.class2Id || !req.body.type) {
+    if (!req.body.diagramId || !req.body.name || !req.body.class1Id || !req.body.class2Id || !req.body.type || !req.body.card1 || !req.body.card2) {
         res.sendStatus(422);
         return;
     }
@@ -44,6 +44,9 @@ router.param('class', function (req, res, next, id) {
 
                 link.class1 = clas1;
                 link.class2 = clas2;
+
+                link.card1 = req.body.card1;
+                link.card2 = req.body.card2;
                 
                 link.diagram = diag;
         

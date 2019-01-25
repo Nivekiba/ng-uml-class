@@ -2,6 +2,7 @@
   min-width: 150px;
   max-width: 500px;
   width: 100%;
+  margin: 0 auto;
 }
 
 .full-width {
@@ -11,6 +12,7 @@
 .title {
   margin: 0 auto;
 }
+<<<<<<< HEAD
 
 .contenu{
   min-width: 150px;
@@ -19,3 +21,5 @@
   margin: 0 auto;
 }
  
+=======
+>>>>>>> bb0562bbce768b9ee0d960c3b7e28282cd81a74d

@@ -7,7 +7,7 @@ let PropertySchema = new mongoose.Schema({
     visibility: {type: String, required: true},
     class: { type: mongoose.Schema.Types.ObjectId, ref: 'Class' },
     link: { type: mongoose.Schema.Types.ObjectId, ref: 'Link' }
- });
+ }, { collection: "properties" });
 
  PropertySchema.methods.toDto = function () {
     return {

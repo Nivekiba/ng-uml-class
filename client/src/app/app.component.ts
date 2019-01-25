@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthService } from './auth.service';
+import { Router } from "@angular/router";
+import { LoginService } from './login-component/login.service';
 
 @Component({
   selector: 'app-root',
@@ -7,8 +8,13 @@ import { AuthService } from './auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(public auth: AuthService) {
-    auth.handleAuthentication();
+  constructor(public auth: LoginService, public router: Router) {
+
+  }
+  logout() {
+    this.auth.deleteToken();
+    this.auth.validateLogout();
+    this.router.navigate(['/login']);
   }
 }
 

@@ -34,11 +34,12 @@ router.post('/signin', function(req, res) {
       } else {
         // check if password matches
         user.comparePassword(req.body.password, function (err, isMatch) {
+          console.log("matching passwork ",isMatch)
           if (isMatch && !err) {
             // if user is found and password is right create a token
             var token = jwt.sign({id: user._id}, "my_secret");
             // return the information including token as JSON
-            res.json({success: true, token: 'JWT ' + token});
+            res.json({success: true, token: 'JWT ' + token, user: user.toDto()});
           } else {
             res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
           }
