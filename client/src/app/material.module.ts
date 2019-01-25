@@ -14,6 +14,8 @@ import {
   MatInputModule,
   MatSelectModule,
   MatDatepickerModule,
+  MatMenuModule,
+  MatSnackBarModule
 } from '@angular/material';
 import {MatGridListModule} from '@angular/material/grid-list';
 
@@ -30,8 +32,10 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatDialogModule,
     MatInputModule,
     MatSelectModule,
-  MatDatepickerModule,
-  MatGridListModule
+    MatDatepickerModule,
+    MatGridListModule,
+    MatMenuModule,
+    MatSnackBarModule
   ],
   exports: [
     MatSidenavModule,
@@ -44,9 +48,11 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatDialogModule,
     MatInputModule,
     MatSelectModule,
-	MatDatepickerModule,
-  MatFormFieldModule,
-  MatGridListModule
+	  MatDatepickerModule,
+    MatFormFieldModule,
+    MatGridListModule,
+    MatMenuModule,
+    MatSnackBarModule
   ]
 })
 export class MaterialModule {}

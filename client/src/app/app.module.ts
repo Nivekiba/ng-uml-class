@@ -10,7 +10,7 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {AppRouters} from './app.routes';
 import {DataService} from './data/data.service';
 import {AuthService} from './auth.service';
-import {PostDialogComponent} from './post-dialog/post-dialog.component';
+import { DiagramDialogComponent } from "./diagram-dialog/diagram-dialog.component";
 import {FormsModule} from '@angular/forms';
 import { RegistrationComponentComponent } from './registration-component/registration-component.component';
 import { LoginComponentComponent } from './login-component/login-component.component';
@@ -22,8 +22,8 @@ import { AuthGuard } from './auth.guard';
     AppComponent,
     WelcomeComponent,
     DashboardComponent,
-    PostDialogComponent,
-	RegistrationComponentComponent,
+    DiagramDialogComponent,
+	  RegistrationComponentComponent,
     LoginComponentComponent
   ],
   imports: [
@@ -38,7 +38,7 @@ import { AuthGuard } from './auth.guard';
   providers: [DataService, AuthService, HttpClientModule, AuthGuard],
   bootstrap: [AppComponent],
   entryComponents: [
-    PostDialogComponent
+    DiagramDialogComponent
   ]
 })
 export class AppModule {}

@@ -13,6 +13,10 @@
   max-height: 500px;
 }
 
+#co {
+  margin: 20px;
+}
+
 a {
   cursor: pointer;
 }
@@ -86,4 +90,9 @@ a {
   display: block;
   margin-left: 0px;
   margin-top: 0px;
+}
+
+mat-card > span:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
