@@ -32,10 +32,10 @@ router.param('class', function (req, res, next, id) {
     Diagram.findById(req.body.diagramId).then((diag) => {
         if (!diag) { res.status(404).json({ msg: "Diagram not found"}); return;}
         console.log("====>",req.body.class1Id)
-        Class.findById(req.body.class1Id).then((clas1) => {
+        Class.findById(req.body.class1Id).populate("properties").then((clas1) => {
             if (!clas1) { res.status(404).json({ msg: "Class 1 not found"}); return;}
 
-            Class.findById(req.body.class2Id).then((clas2) => {
+            Class.findById(req.body.class2Id).populate("properties").then((clas2) => {
                 if (!clas2) { res.status(404).json({ msg: "Class 2 not found"}); return;}
 
                 let link = new Link();
@@ -74,7 +74,22 @@ router.param('class', function (req, res, next, id) {
     }
   
   
-    Link.findById(req.body.id).then((link) => {
+    Link.findById(req.body.id)
+    .populate("class1")
+    .populate("class2")
+    .populate({
+        path: 'class1',
+        populate: {
+            path: "properties"
+        }
+    })
+    .populate({
+        path: 'class2',
+        populate: {
+            path: "properties"
+        }
+    })
+    .then((link) => {
         link.type = req.body.type
         link.name = req.body.name
   

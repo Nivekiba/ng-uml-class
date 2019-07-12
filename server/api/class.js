@@ -58,7 +58,7 @@ router.param('class', function (req, res, next, id) {
     }
   
   
-    Class.findById(req.body.id).then((clas) => {
+    Class.findById(req.body.id).populate("properties").then((clas) => {
         clas.type = req.body.type
         clas.name = req.body.name
   

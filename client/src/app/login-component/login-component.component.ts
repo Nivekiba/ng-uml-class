@@ -31,7 +31,8 @@ export class LoginComponentComponent implements OnInit {
           if(result["success"]){
             this.loginservice.setToken(result["token"])
             localStorage.setItem("user", JSON.stringify(result["user"]));
-            this.router.navigateByUrl("/dashboard")
+            //this.router.navigateByUrl("/dashboard")
+            location.href = "/#"
           }
         },
         err => {

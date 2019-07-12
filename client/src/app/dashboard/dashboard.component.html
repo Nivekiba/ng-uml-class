@@ -14,18 +14,18 @@
     <div class="container" id="cont">
       <div>
         <mat-card class="card" >
-            <mat-card-title >
-                <h3><u>List of diagrams</u></h3>
+            <mat-card-title style="margin-left: 10px">
+                <h3><u>My diagrams</u></h3>
             </mat-card-title>
 
           <mat-grid-list cols="8" class="large">
             <mat-grid-tile colspan="2" rowspan="2" class="largpe">
                 <mat-list>
-                    <mat-card style="min-width: 290px; margin:10px; height: 30px;" *ngFor="let diag of diagrams">
+                    <mat-card style="min-width: 290px; margin:10px; height: 20px;" *ngFor="let diag of diagrams" [class.selected]="currentDiag && diag.id == currentDiag.id">
                         <span style="min-width: 60%;" (click)="loadDiagram(diag.id)">
                           {{ diag.title }}
                         </span>
-                        <span style="float: right;">
+                        <span style="float: right;margin-top: -10px">
                           <button mat-button [matMenuTriggerFor]="menu"><mat-icon class="mat-8">more_vert</mat-icon></button>
                           <mat-menu #menu="matMenu">
                             <button mat-menu-item (click)="editDiagram(diag.id)">edit</button>

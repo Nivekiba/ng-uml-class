@@ -35,10 +35,13 @@ export class DashboardComponent implements AfterViewInit{
     })
   }
 
-  ngOnInit(){
-  }
-
   ngAfterViewInit(){
+
+    this.dataService.getDiagrams().subscribe(result => {
+      this.diagrams = result["diagrams"]
+      console.log(result["diagrams"])
+    })
+
     var $ = go.GraphObject.make;
     this.myDiagram = $(go.Diagram, this.graphContainer.nativeElement,
       {
@@ -48,10 +51,10 @@ export class DashboardComponent implements AfterViewInit{
           $(go.Shape, "LineV", { stroke: "lightgray", strokeWidth: 0.5 })
         ),
         // layout: $(go.GridLayout , { spacing: new go.Size(200,100) }),
-        "LinkDrawn": changeLinkType,     // these two DiagramEvents call a
-        "LinkRelinked": changeLinkType,
+        layout: $(go.ForceDirectedLayout),
+        "LinkDrawn": changeLinkType.bind(this),     // these two DiagramEvents call a
+        "LinkRelinked": changeLinkType.bind(this),
         "draggingTool.dragsLink": true,
-        "ExternalObjectsDropped":afterDragging,
         "draggingTool.isGridSnapEnabled": true,
         "linkingTool.isUnconnectedLinkValid": true,
         "linkingTool.portGravity": 20,
@@ -93,6 +96,9 @@ export class DashboardComponent implements AfterViewInit{
                         myDiagram.model.commit(m => {
                           m.set(e.newValue, "key", res["id"])
                           m.set(e.newValue, "name", res["name"])
+                          m.set(e.newValue, "type", res["type"])
+                          m.set(e.newValue, "properties", [])
+                          m.set(e.newValue, "methods", [])
 
                           this.currentDiag.classes.push(res)
                         })
@@ -109,6 +115,8 @@ export class DashboardComponent implements AfterViewInit{
                       // console.log(evt.propertyName + " added link between nodes : " + myDiagram.findNodeForKey(e.newValue.from).data.id + " and " + myDiagram.findNodeForKey(e.newValue.to).data.id);
                   } else if (e.change === go.ChangedEvent.Remove) {
                       // console.log(evt.propertyName + " removed link between nodes: " + myDiagram.findNodeForKey(e.oldValue.from).data.id + " and " + myDiagram.findNodeForKey(e.oldValue.to).data.id);
+                      this.dataService.deleteLink(e.oldValue.key).subscribe(res => {})
+                      this.currentDiag.links = this.currentDiag.links.filter(c => c.id != e.oldValue.key)
                   }
               }
           });
@@ -129,6 +137,31 @@ export class DashboardComponent implements AfterViewInit{
             }
         })*/
 
+        function changeLinkName(tb, old, currentText){
+          var data = tb.part.data
+          if(data.type != "association") return
+          this.dataService.updateLink(data.key, currentText, data.type, data.fromCard, data.toCard).subscribe(e => {
+            var link = this.currentDiag.links.filter(x => x.id == data.key)[0]
+            link.name = currentText;
+          })
+        }
+        function changefromCardLink(tb, old, currentText){
+          var data = tb.part.data
+          if(data.type != "association") return
+          this.dataService.updateLink(data.key, data.name, data.type, currentText, data.toCard).subscribe(e => {
+            var link = this.currentDiag.links.filter(x => x.id == data.key)[0]
+            link.card1 = currentText;
+          })
+        }
+        function changetoCardLink(tb, old, currentText){
+          var data = tb.part.data
+          if(data.type != "association") return
+          this.dataService.updateLink(data.key, data.name, data.type, data.fromCard, currentText).subscribe(e => {
+            var link = this.currentDiag.links.filter(x => x.id == data.key)[0]
+            link.card2 = currentText;
+          })
+        }
+
         myDiagram.allowDrop = true;
         myDiagram.linkTemplate =
           $(go.Link,
@@ -140,10 +173,10 @@ export class DashboardComponent implements AfterViewInit{
             },
             new go.Binding("points").makeTwoWay(),
             $(go.Shape, new go.Binding("strokeDashArray", "type", function(t){ return (t=="relassoc")? [4, 4] : [] })),
-            $(go.Shape, { toArrow: "", fill: "white", scale: 1.3 }, new go.Binding("toArrow", "type", this.convertType)),
-            $(go.TextBlock, { isMultiline: false, editable: true }, new go.Binding("text", "name"), { segmentOffset: new go.Point(0,-10) }),
-            $(go.TextBlock, { isMultiline: false, editable: true }, new go.Binding("text", "toCard"), { segmentIndex: 0, segmentFraction: 0.12, segmentOffset: new go.Point(0, -10) }),
-            $(go.TextBlock, { isMultiline: false, editable: true }, new go.Binding("text", "fromCard"), { segmentIndex: -1, segmentFraction: 0.12, segmentOffset: new go.Point(0, -10) })
+            $(go.Shape, { fromArrow: "", fill: "white", scale: 1.3 }, new go.Binding("fromArrow", "type", this.convertType)),
+            $(go.TextBlock, { isMultiline: false, editable: true, font:"bold 12pt sans-serif", textEdited: changeLinkName.bind(this) }, new go.Binding("text", "name"), { segmentOffset: new go.Point(0,-10) }),
+            $(go.TextBlock, { isMultiline: false, editable: true, font:"bold 12pt sans-serif", textEdited: changefromCardLink.bind(this) }, new go.Binding("text", "fromCard"), { segmentIndex: 0, segmentFraction: 0.12, segmentOffset: new go.Point(0, -10) }),
+            $(go.TextBlock, { isMultiline: false, editable: true, font:"bold 12pt sans-serif", textEdited: changetoCardLink.bind(this) }, new go.Binding("text", "toCard"), { segmentIndex: -1, segmentFraction: 0.12, segmentOffset: new go.Point(0, -10) })
           )
 
         var propertyTemplate =
@@ -152,7 +185,7 @@ export class DashboardComponent implements AfterViewInit{
             { isMultiline: false, width: 12, click: changeVisibility },
             new go.Binding("text", "visibility", convertVisibility)),
           $(go.TextBlock,
-            { isMultiline: false, editable: true },
+            { isMultiline: false, editable: true, textEdited: changePropertyName.bind(this) },
             new go.Binding("text", "p"))
           );
         function convertVisibility(v){
@@ -163,25 +196,82 @@ export class DashboardComponent implements AfterViewInit{
             default: return "~";
           }
         }
-        function changeVisibility(e){
-          console.log("==>", e)
+
+        function changeVisibility(tb, old, currentText){
+
+        }
+        function changePropertyName(tb, old, currentText){
+          var data = tb.part.data
+          console.log(data)
+          var prop = this.currentDiag.classes.filter(x => x.id == data.key)[0].properties.filter(x => x.type=="prop" && x.name==old)[0]
+          this.dataService.updateProperty(prop.id,  currentText, [], prop.type, prop.visibility).subscribe(res => {
+            prop.name = currentText;
+            var props = this.currentDiag.classes.filter(x => x.id == data.key)[0].properties;
+            this.myDiagram.model.set(data, "properties", [])
+            this.myDiagram.model.set(data, "properties", props.map(pr => {
+              if(pr.type == "prop")
+              return {
+                key: pr.id,
+                p: pr.name,
+                visibility: pr.visibility
+              }
+            }))
+          })
+        }
+
+
+        function changeMethodName(tb, old, currentText){
+          var data = tb.part.data
+          console.log(data)
+          var meth = this.currentDiag.classes.filter(x => x.id == data.key)[0].properties.filter(x => x.type=="meth" && x.name==old)[0]
+          this.dataService.updateProperty(meth.id,  currentText, meth.params, meth.type, meth.visibility).subscribe(res => {
+            meth.name = currentText;
+            var meths = this.currentDiag.classes.filter(x => x.id == data.key)[0].properties;
+            this.myDiagram.model.set(data, "methods", [])
+            this.myDiagram.model.set(data, "methods", meths.map(m => {
+              if(m.type == "meth")
+              return {
+                key: m.id,
+                name: m.name,
+                visiblity: m.visibility,
+                parameters: m.params.map(pr => {
+                  return {
+                    key: pr.id,
+                    p: pr.name,
+                  }
+                })
+              }
+            }));
+          })
+        }
+        function changeMethodProps(tb, old, curre){
+          console.log(old, curre, myDiagram.selection.first().data)
         }
         var methodTemplate =
           $(go.Panel, "Horizontal",
           $(go.TextBlock,"+",
-            { isMultiline: false, width: 12, click: changeVisibility },
+            {
+              isMultiline: false, width: 12, textEdited: changeVisibility.bind(this)
+            },
             new go.Binding("text", "visibility", convertVisibility)),
           $(go.TextBlock,
-            { isMultiline: false, editable: true },
+            {
+              isMultiline: false, editable: true,
+              textEdited: changeMethodName.bind(this)
+            },
             new go.Binding("text", "name")),
-          $(go.TextBlock,"()",
-            { isMultiline: false, editable: true },
+          $(go.TextBlock,""),
+          $(go.TextBlock,"",
+            { isMultiline: false, editable: true, textEdited: changeMethodProps.bind(this) },
             new go.Binding("text", "parameters", function(params){
-            var s="(";
-            for(var e in params){s+=params[e].p+", "}
-            s=s.substr(0, s.length-2)
-            return s+")";
-            }))
+                if(params.length == 0) return "";
+                var s="";
+                for(var e in params){s+=params[e].p+","}
+                s=s.substr(0, s.length-1)
+                return s+" ";
+              })
+            ),
+          $(go.TextBlock,""),
           );
 
         var cxElement = document.getElementById("contextMenu")
@@ -290,34 +380,39 @@ export class DashboardComponent implements AfterViewInit{
           ));
           myDiagram.model.linkLabelKeysProperty =  "labelKeys";
 
-          function afterDragging(e){
-            var link = e.subject;
-            e.subject.each(function(node){
-              link = node
-            })
-            if(link.data.type && link.data.type=="association"){
-              e.diagram.model.commit(function(m){
-                var id = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-                m.set(link.data, "labelKeys", [id]);
-
-                var nod = {key: id, category: "LinkLabel"}
-                m.addNodeData(nod);
-                var noe = m.nodeDataArray[m.nodeDataArray.length - 1]
-                m.set(noe, "labeledLink", link.data);
-                m.addLabelKeyForLinkData(link.data, id)
-              })
-            }
-          }
           function changeLinkType(e){
             var link = e.subject
             if(!link.fromNode || !link.toNode) return;
 
-            var linktolink = (link.fromNode.isLinkLabel || link.toNode.isLinkLabel);
+           /* var linktolink = (link.fromNode.isLinkLabel || link.toNode.isLinkLabel);
             if(linktolink){
               e.diagram.model.set(link.data, "type", "relassoc");
               var key = link.fromNode.data.key
               var links = myDiagram.model.linkDataArray.filter(e => e.labelKeys.indexOf(key) >= 0)
               e.diagram.model.set(link.toNode.data, "key", links[0].key);
+            }*/
+            if(link.fromNode && link.toNode){
+                console.log("We have to create link from "+link.fromNode.key+" to "+link.toNode.key)
+
+                this.dataService.saveLink(
+                  this.currentDiag.id,
+                  link.fromNode.key,
+                  link.toNode.key,
+                  link.data.name || "_",
+                  link.data.type,
+                  link.data.fromCard || "ras",
+                  link.data.toCard || "ras"
+                ).subscribe(res => {
+                  this.myDiagram.model.commit(m => {
+                    m.set(link.data, "key", res["id"])
+                    m.set(link.data, "name", res["name"] == "_" ? "":res["name"])
+                    m.set(link.data, "type", res["type"])
+                    m.set(link.data, "properties", [])
+                    m.set(link.data, "methods", [])
+                    this.currentDiag.links.push(res)
+                    console.log(link.data)
+                })
+              });
             }
           }
 
@@ -406,11 +501,11 @@ export class DashboardComponent implements AfterViewInit{
         var methods = obj.part.data.methods || [];
         var name = "method"+(methods.length)
 
-        methods.push({name: "method"+(methods.length), parameters: [{p: "params"}]})
+        methods.push({name: "method"+(methods.length)+"()", parameters: [] })
         m.set(obj.part.data, "methods", [])
         m.set(obj.part.data, "methods", methods)
 
-        this.dataService.saveProperty(key, name,  "meth", "public").subscribe(res => {
+        this.dataService.saveProperty(key, name+"()",  "meth", "public").subscribe(res => {
           this.currentDiag.classes.filter(x => x.id == key)[0].properties.push(res)
         })
 
@@ -421,6 +516,7 @@ export class DashboardComponent implements AfterViewInit{
 
   addProperty(e, obj){
     var myDiagram = this.myDiagram;
+
     myDiagram.selection.each(obj => {
       myDiagram.model.commit(m => {
         var key = obj.part.data.key
@@ -440,12 +536,22 @@ export class DashboardComponent implements AfterViewInit{
     myDiagram.currentTool.stopTool();
   }
 
-  removeMethod(e, obj){
+  removeMethod(e){
     var myDiagram = this.myDiagram;
-    myDiagram.selection.each(function(obj){
-      myDiagram.model.commit(function(m){
+    myDiagram.selection.each(obj => {
+      myDiagram.model.commit(m => {
         var methods = obj.part.data.methods || [];
+        var keyC = obj.part.data.key;
+        if(methods.length == 0) {
+          myDiagram.currentTool.stopTool();
+          return;
+        }
+        var key = methods[methods.length - 1].key;
+
+        this.dataService.deleteProperty(key).subscribe(res => {})
+        this.currentDiag.classes.filter(x => x.id == keyC)[0].properties = this.currentDiag.classes.filter(x => x.id == keyC)[0].properties.filter(x => x.id != key)
         methods = methods.slice(0, methods.length-1)
+
         m.set(obj.part.data, "methods", [])
         m.set(obj.part.data, "methods", methods)
       })
@@ -455,9 +561,18 @@ export class DashboardComponent implements AfterViewInit{
 
   removeProperty(e){
     var myDiagram = this.myDiagram;
-    myDiagram.selection.each(function(obj){
-      myDiagram.model.commit(function(m){
+    myDiagram.selection.each(obj => {
+      myDiagram.model.commit(m => {
         var props = obj.part.data.properties || [];
+        var keyC = obj.part.data.key;
+        if(props.length == 0){
+          myDiagram.currentTool.stopTool();
+          return;
+        }
+        var key = props[props.length - 1].key
+
+        this.dataService.deleteProperty(key).subscribe(res => {})
+        this.currentDiag.classes.filter(x => x.id == keyC)[0].properties = this.currentDiag.classes.filter(x => x.id == keyC)[0].properties.filter(x => x.id != key)
         props = props.slice(0, props.length-1)
         m.set(obj.part.data, "properties", [])
         m.set(obj.part.data, "properties", props)
@@ -550,10 +665,12 @@ export class DashboardComponent implements AfterViewInit{
     for(var i=0; i<links.length; i++){
       linkData.push({
         key: links[i].id,
+        name: links[i].name == "_" ? "":links[i].name,
+        type: links[i].type,
         from: links[i].class1.id,
         to: links[i].class2.id,
-        fromCard: links[i].card1,
-        toCard: links[i].card2
+        fromCard: links[i].card1 == "ras"?"":links[i].card1,
+        toCard: links[i].card2 == "ras"?"":links[i].card2,
       })
     }
     this.myDiagram.model = new go.GraphLinksModel(nodeData, linkData)

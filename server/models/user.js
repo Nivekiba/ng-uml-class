@@ -25,10 +25,7 @@ UserSchema.pre('remove', (next) => {
         id: this._id,
         username: this.username,
         name: this.name,
-        sexe: this.sexe,
-        diagrams: this.diagrams.map((diagram) => {
-            return diagram.toDto();
-        })
+        sexe: this.sexe
     }
  };
   

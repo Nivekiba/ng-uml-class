@@ -68,7 +68,7 @@ router.get('/', passport.authenticate("jwt", { session: false }) ,(req, res) => 
     var token = getToken(req.headers)
     if(!token)
         return res.status(403).send({success: false, msg: 'Unauthorized.'});
-
+    
     Diagram.find({user: req.user._id})
         .populate({
             path: 'classes',
@@ -125,7 +125,11 @@ router.get('/', passport.authenticate("jwt", { session: false }) ,(req, res) => 
     diagram.user = req.user
   
     diagram.save().then(() => {
-        res.json(diagram.toDto()).statusCode(201);
+        req.user.diagrams.push(diagram);
+
+        req.user.save().then(() => {
+            res.status(201).json(diagram.toDto());
+        });
     })
   
  });

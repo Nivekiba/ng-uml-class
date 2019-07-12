@@ -12,9 +12,10 @@ export class AppComponent {
 
   }
   logout() {
-    this.auth.deleteToken();
-    this.auth.validateLogout();
-    this.router.navigate(['/login']);
+    this.auth.validateLogout().subscribe(res => {
+      this.auth.deleteToken();
+      this.router.navigate(['/login']);
+    });
   }
 }
 

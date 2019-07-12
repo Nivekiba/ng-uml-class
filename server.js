@@ -6,7 +6,7 @@ import http from "http";
 import bodyParser from "body-parser"
 import mongoose, { mongo } from "mongoose"
 
-mongoose.connect("mongodb://localhost/test_db", {useNewUrlParser: true});
+mongoose.connect("mongodb://localhost/ng_uml", {useNewUrlParser: true});
 mongoose.set("debug", true)
 mongoose.set('useCreateIndex', true);
 
@@ -25,6 +25,7 @@ const app = express();
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:false}));
 const api = require('./server/api/')
+
 app.use('/api', api)
 
 //Enable CORS
@@ -32,6 +33,7 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     next();
 });
 
